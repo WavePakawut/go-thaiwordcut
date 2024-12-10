@@ -1,12 +1,14 @@
 package gothaiwordcut
 
 import (
-	"github.com/armon/go-radix"
-	"os"
 	"bufio"
+	"fmt"
+	"os"
+	"path/filepath"
 	"regexp"
 	"runtime"
-	"path"
+
+	"github.com/armon/go-radix"
 )
 
 // Segmenter : Segmenter main class
@@ -87,9 +89,21 @@ func Wordcut(options ...Option) *Segmenter {
 }
 
 // LoadDefaultDict : load dictionary into trie
-func (w *Segmenter) LoadDefaultDict() {
+//
+//	func (w *Segmenter) LoadDefaultDict() {
+//		_, filename, _, _ := runtime.Caller(0)
+//		w.loadFileIntoTrie(path.Dir(filename) + "/dict/lexitron.txt")
+//	}
+func (w *Segmenter) LoadDefaultDict() error {
 	_, filename, _, _ := runtime.Caller(0)
-	w.loadFileIntoTrie(path.Dir(filename) + "/dict/lexitron.txt")
+	dictPath := filepath.Join(filepath.Dir(filename), "dict", "lexitron.txt")
+
+	if _, err := os.Stat(dictPath); os.IsNotExist(err) {
+		return fmt.Errorf("dictionary file not found at %s", dictPath)
+	}
+
+	w.loadFileIntoTrie(dictPath)
+	return nil
 }
 
 /*
