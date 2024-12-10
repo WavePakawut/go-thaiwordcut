@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"runtime"
 
 	"github.com/armon/go-radix"
 )
@@ -95,13 +94,14 @@ func Wordcut(options ...Option) *Segmenter {
 //		w.loadFileIntoTrie(path.Dir(filename) + "/dict/lexitron.txt")
 //	}
 func (w *Segmenter) LoadDefaultDict() error {
-	_, filename, _, _ := runtime.Caller(0)
-	dictPath := filepath.Join(filepath.Dir(filename), "dict", "lexitron.txt")
-
+	exePath, err := os.Executable()
+	if err != nil {
+		return fmt.Errorf("failed to get executable path: %v", err)
+	}
+	dictPath := filepath.Join(filepath.Dir(exePath), "dict", "lexitron.txt")
 	if _, err := os.Stat(dictPath); os.IsNotExist(err) {
 		return fmt.Errorf("dictionary file not found at %s", dictPath)
 	}
-
 	w.loadFileIntoTrie(dictPath)
 	return nil
 }
