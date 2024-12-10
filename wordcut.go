@@ -93,7 +93,15 @@ func Wordcut(options ...Option) *Segmenter {
 //		_, filename, _, _ := runtime.Caller(0)
 //		w.loadFileIntoTrie(path.Dir(filename) + "/dict/lexitron.txt")
 //	}
-func (w *Segmenter) LoadDefaultDict() error {
+func (w *Segmenter) LoadDefaultDict(customPath string) error {
+	if customPath != "" {
+		if _, err := os.Stat(customPath); os.IsNotExist(err) {
+			return fmt.Errorf("dictionary file not found at %s", customPath)
+		}
+		w.loadFileIntoTrie(customPath)
+		return nil
+	}
+
 	exePath, err := os.Executable()
 	if err != nil {
 		return fmt.Errorf("failed to get executable path: %v", err)
