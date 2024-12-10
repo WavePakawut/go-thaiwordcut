@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 
 	"github.com/armon/go-radix"
 )
@@ -101,16 +102,13 @@ func (w *Segmenter) LoadDefaultDict(customPath string) error {
 		w.loadFileIntoTrie(customPath)
 		return nil
 	}
-
-	exePath, err := os.Executable()
-	if err != nil {
-		return fmt.Errorf("failed to get executable path: %v", err)
+	// Fallback to the default location
+	_, filename, _, _ := runtime.Caller(0)
+	defaultPath := filepath.Join(filepath.Dir(filename), "dict", "lexitron.txt")
+	if _, err := os.Stat(defaultPath); os.IsNotExist(err) {
+		return fmt.Errorf("dictionary file not found at %s", defaultPath)
 	}
-	dictPath := filepath.Join(filepath.Dir(exePath), "dict", "lexitron.txt")
-	if _, err := os.Stat(dictPath); os.IsNotExist(err) {
-		return fmt.Errorf("dictionary file not found at %s", dictPath)
-	}
-	w.loadFileIntoTrie(dictPath)
+	w.loadFileIntoTrie(defaultPath)
 	return nil
 }
 
