@@ -64,6 +64,11 @@ func (w *Segmenter) searchTrie(s string) string {
 	if numberResult != "" {
 		return numberResult
 	}
+	// check for standalone punctuation
+	punctuationResult := simpleRegex("^\\.", s)
+	if punctuationResult != "" {
+		return punctuationResult
+	}
 
 	// loop word character, trying to find longest word
 	longestWord, _, _ := w.Tree.LongestPrefix(s)
