@@ -54,24 +54,33 @@ func (w *Segmenter) findSegment(c string) []string {
 
 func (w *Segmenter) searchTrie(s string) string {
 	// check if the word is latin
-	latinResult := simpleRegex("[A-Za-z\\d]*", s)
+	longestWord, _, _ := w.Tree.LongestPrefix(s)
+	if longestWord != "" {
+		return longestWord
+	}
+
+	// Check for Latin words (including hyphens)
+	latinResult := simpleRegex("[A-Za-z\\d-]+", s)
 	if latinResult != "" {
 		return latinResult
 	}
 
-	// check if its number
-	numberResult := simpleRegex("[\\d]*", s)
+	// Check if it's a number
+	numberResult := simpleRegex("[\\d]+", s)
 	if numberResult != "" {
 		return numberResult
 	}
-	// check for standalone punctuation
+
+	// Check for standalone punctuation
 	punctuationResult := simpleRegex("^\\.", s)
 	if punctuationResult != "" {
 		return punctuationResult
 	}
 
-	// loop word character, trying to find longest word
-	longestWord, _, _ := w.Tree.LongestPrefix(s)
+	// Only return `s` if it's a valid word-like sequence (not just a single random character)
+	if len(s) > 1 {
+		return s
+	}
 
 	return longestWord
 }
