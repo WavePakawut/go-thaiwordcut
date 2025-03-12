@@ -40,6 +40,12 @@ func TestThaiWithNumber(t *testing.T) {
 	result := segmenter.Segment("การติดตั้งโปรแกรม Bplus HRM v7.3")
 	assert.Equal(t, []string{"การ", "ติดตั้ง", "โปรแกรม", "Bplus", "HRM", "v7", ".", "3"}, result)
 }
+func TestThaiWithSlash(t *testing.T) {
+	segmenter := Wordcut()
+	segmenter.LoadDefaultDict("")
+	result := segmenter.Segment("ผลคำนวณเงินเดือน/ปิดงวด")
+	assert.Equal(t, []string{"ผล", "คำนวณ", "เงินเดือน", "/", "ปิด", "งวด"}, result)
+}
 func BenchmarkWordcut(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		segmenter := Wordcut()

@@ -73,6 +73,10 @@ func (w *Segmenter) searchTrie(s string) string {
 	if dashResult != "" {
 		return dashResult
 	}
+	slashResult := simpleRegex("^\\/", s)
+	if slashResult != "" {
+		return slashResult
+	}
 
 	// loop word character, trying to find longest word
 	longestWord, _, _ := w.Tree.LongestPrefix(s)
