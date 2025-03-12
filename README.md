@@ -18,4 +18,5 @@ import "github.com/WavePakawut/go-thaiwordcut"
 segmenter := gothaiwordcut.Wordcut()
 segmenter.LoadDefaultDict()
 result := segmenter.Segment("ทดสอบการตัดคำภาษาไทย")
+
 ```
