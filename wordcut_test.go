@@ -46,6 +46,13 @@ func TestThaiWithSlash(t *testing.T) {
 	result := segmenter.Segment("ผลคำนวณเงินเดือน/ปิดงวด")
 	assert.Equal(t, []string{"ผล", "คำนวณ", "เงินเดือน", "/", "ปิด", "งวด"}, result)
 }
+
+func TestThaiWithPlus(t *testing.T) {
+	segmenter := Wordcut()
+	segmenter.LoadDefaultDict("")
+	result := segmenter.Segment("ผลคำนวณเงินเดือน+ปิดงวด")
+	assert.Equal(t, []string{"ผล", "คำนวณ", "เงินเดือน", "+", "ปิด", "งวด"}, result)
+}
 func BenchmarkWordcut(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		segmenter := Wordcut()
