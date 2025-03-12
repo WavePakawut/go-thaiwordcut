@@ -1,4 +1,4 @@
-module gothaiwordcut
+module github.com/WavePakawut/go-thaiwordcut
 
 go 1.22.0
 
